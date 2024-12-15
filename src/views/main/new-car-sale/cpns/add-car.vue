@@ -1,7 +1,6 @@
 <template>
   <div class="add-car">
-    <!-- 表单内容 -->
-    <el-form :model="addForm" ref="formRef" :rules="rules" label-width="100px" class="form-content">
+    <el-form :model="addForm" ref="formRef" :rules="rules" label-width="100px">
       <div class="form-layout">
         <!-- 左侧表单区域 -->
         <div class="form-left">
@@ -100,14 +99,16 @@
               </el-upload>
             </div>
           </div>
+
+          <!-- 添加提交按钮 -->
+          <div class="submit-section">
+            <el-button type="primary" :icon="Plus" @click="submit" size="large">
+              确认上链
+            </el-button>
+          </div>
         </div>
       </div>
     </el-form>
-
-    <!-- 底部操作栏 -->
-    <div class="form-footer">
-      <el-button size="large" @click="handleReset">重置表单</el-button>
-    </div>
   </div>
 </template>
 
@@ -200,19 +201,28 @@ const handleReset = () => {
     })
   }).catch(() => {})
 }
+
+// 暴露submit方法给父组件
+defineExpose({
+  submit
+})
 </script>
 
 <style lang="less" scoped>
 .add-car {
   padding: 20px;
+  min-height: 0;
+  overflow: visible;
 
   .form-layout {
     display: flex;
     gap: 24px;
+    flex-wrap: wrap;
 
     .form-left,
     .form-right {
       flex: 1;
+      min-width: 300px;
       display: flex;
       flex-direction: column;
       gap: 24px;
@@ -351,16 +361,28 @@ const handleReset = () => {
     }
   }
 
-  .form-footer {
+  .submit-section {
+    margin-top: 24px;
     display: flex;
     justify-content: center;
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid #ffd591;
 
     .el-button {
-      min-width: 120px;
+      min-width: 160px;
+      background: #ffa940;
+      border-color: #ffa940;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #ffb84d;
+        border-color: #ffb84d;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(250, 140, 22, 0.2);
+      }
     }
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 </style>

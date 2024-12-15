@@ -10,31 +10,17 @@
       </div>
     </div>
 
-    <div class="content-container">
-      <div class="section">
-        <div class="section-header">
-          <el-icon><Upload /></el-icon>
-          <span>车辆上链</span>
-          <div class="header-actions">
-            <el-button type="primary" :icon="Plus" @click="handleAddCar">
-              确认上链
-            </el-button>
+    <div class="content-wrapper">
+      <div class="content-container">
+        <div class="section">
+          <div class="section-header">
+            <el-icon><Upload /></el-icon>
+            <span>车辆上链</span>
+          </div>
+          <div class="section-content">
+            <add-car ref="addCarRef"></add-car>
           </div>
         </div>
-        <add-car ref="addCarRef"></add-car>
-      </div>
-      
-      <div class="section">
-        <div class="section-header">
-          <el-icon><List /></el-icon>
-          <span>新车列表</span>
-          <div class="header-actions">
-            <el-button type="primary" :icon="Refresh" @click="refreshList">
-              刷新列表
-            </el-button>
-          </div>
-        </div>
-        <car-table></car-table>
       </div>
     </div>
   </div>
@@ -49,10 +35,6 @@ import { Plus, Upload, List, Refresh } from '@element-plus/icons-vue'
 const store = useStore()
 const addCarRef = ref(null)
 
-const handleAddCar = () => {
-  addCarRef.value?.submit()
-}
-
 const refreshList = () => {
   store.dispatch('carIndex/getAllCarAction')
 }
@@ -63,9 +45,11 @@ refreshList()
 <style lang="less" scoped>
 .new-car-sale {
   height: 100%;
-  background-color: #f0f5ff;
+  display: flex;
+  flex-direction: column;
   
   .page-header {
+    flex-shrink: 0;
     padding: 24px 32px;
     background: linear-gradient(135deg, #ffa940, #fa8c16);
     
@@ -100,7 +84,35 @@ refreshList()
     }
   }
 
+  .content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+    background-color: #f0f5ff;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f0f5ff;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #ffd591;
+      border-radius: 4px;
+      
+      &:hover {
+        background: #ffa940;
+      }
+    }
+  }
+
   .content-container {
+    flex: 1;
     padding: 24px 32px;
     display: flex;
     flex-direction: column;
@@ -110,7 +122,7 @@ refreshList()
       background: white;
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(250, 140, 22, 0.08);
-      overflow: hidden;
+      overflow: visible;
 
       .section-header {
         display: flex;
@@ -151,6 +163,11 @@ refreshList()
             }
           }
         }
+      }
+
+      .section-content {
+        overflow: visible;
+        padding: 0;
       }
     }
   }

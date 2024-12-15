@@ -53,7 +53,7 @@ const isCollapse = ref(true)
 
   .page-info {
     height: 100%;
-    overflow: hidden;
+    overflow: auto;
     border-radius: 5px;
   }
 }

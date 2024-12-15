@@ -10,50 +10,61 @@
       </div>
     </div>
 
-    <div class="content-container">
-      <div class="section">
-        <div class="section-header">
-          <el-icon><Search /></el-icon>
-          <span>车辆搜索</span>
-          <div class="live-update">
-            <el-icon><Timer /></el-icon>
-            <span>实时更新</span>
+    <div class="content-wrapper">
+      <div class="content-container">
+        <!-- 搜索区域 -->
+        <div class="section">
+          <div class="section-header">
+            <el-icon><Search /></el-icon>
+            <span>车辆搜索</span>
+            <div class="live-update">
+              <el-icon><Timer /></el-icon>
+              <span>实时更新</span>
+            </div>
+          </div>
+          <div class="section-content">
+            <car-search></car-search>
           </div>
         </div>
-        <car-search></car-search>
-      </div>
 
-      <div class="section">
-        <div class="section-header">
-          <el-icon><Van /></el-icon>
-          <span>在售车辆</span>
-          <el-tag type="success" size="small" class="count-tag">
-            {{ carDatas.length }}辆
-          </el-tag>
-          <div class="header-actions">
-            <el-button type="primary" :icon="Refresh" size="small" @click="refreshList">
-              刷新列表
-            </el-button>
+        <!-- 在售车辆列表 -->
+        <div class="section">
+          <div class="section-header">
+            <el-icon><Van /></el-icon>
+            <span>在售车辆</span>
+            <el-tag type="success" size="small" class="count-tag">
+              {{ carDatas.length }}辆
+            </el-tag>
+            <div class="header-actions">
+              <el-button type="primary" :icon="Refresh" @click="refreshList">
+                刷新列表
+              </el-button>
+            </div>
+          </div>
+          <div class="section-content">
+            <car-table v-if="viewMode === 'table'"></car-table>
+            <car-grid v-else></car-grid>
           </div>
         </div>
-        <car-table v-if="viewMode === 'table'"></car-table>
-        <car-grid v-else></car-grid>
-      </div>
 
-      <div class="section">
-        <div class="section-header">
-          <el-icon><Histogram /></el-icon>
-          <span>交易记录</span>
-          <el-tag type="info" size="small" class="count-tag">
-            {{ historyData.length }}笔
-          </el-tag>
-          <div class="header-actions">
-            <el-button type="primary" :icon="Refresh" size="small" @click="refreshHistory">
-              刷新记录
-            </el-button>
+        <!-- 交易历史 -->
+        <div class="section">
+          <div class="section-header">
+            <el-icon><Histogram /></el-icon>
+            <span>交易记录</span>
+            <el-tag type="info" size="small" class="count-tag">
+              {{ historyData.length }}笔
+            </el-tag>
+            <div class="header-actions">
+              <el-button type="primary" :icon="Refresh" @click="refreshHistory">
+                刷新记录
+              </el-button>
+            </div>
+          </div>
+          <div class="section-content">
+            <trade-history></trade-history>
           </div>
         </div>
-        <trade-history></trade-history>
       </div>
     </div>
   </div>
@@ -93,9 +104,11 @@ refreshHistory()
 <style lang="less" scoped>
 .car-market {
   height: 100%;
-  background-color: #f0f5ff;
+  display: flex;
+  flex-direction: column;
   
   .page-header {
+    flex-shrink: 0;
     padding: 24px 32px;
     background: linear-gradient(135deg, #13c2c2, #52c41a);
     
@@ -130,7 +143,35 @@ refreshHistory()
     }
   }
 
+  .content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+    background-color: #f0f5ff;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f0f5ff;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #b7eb8f;
+      border-radius: 4px;
+      
+      &:hover {
+        background: #52c41a;
+      }
+    }
+  }
+
   .content-container {
+    flex: 1;
     padding: 24px 32px;
     display: flex;
     flex-direction: column;
@@ -140,21 +181,20 @@ refreshHistory()
       background: white;
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(19, 194, 194, 0.1);
-      overflow: hidden;
+      overflow: visible;
 
       .section-header {
         display: flex;
         align-items: center;
         gap: 12px;
         padding: 20px 24px;
-        background: #fafcff;
-        border-bottom: 1px solid #e6f0ff;
-        position: relative;
+        background: #f6ffed;
+        border-bottom: 1px solid #b7eb8f;
 
         .el-icon {
           font-size: 20px;
-          color: #13c2c2;
-          background: #e6fffb;
+          color: #52c41a;
+          background: #f6ffed;
           padding: 8px;
           border-radius: 8px;
         }
@@ -170,19 +210,14 @@ refreshHistory()
           align-items: center;
           gap: 4px;
           margin-left: 12px;
-          background: linear-gradient(135deg, #1890ff, #36cfc9);
+          background: linear-gradient(135deg, #13c2c2, #52c41a);
           padding: 6px 14px;
           border-radius: 20px;
           color: white;
           font-size: 13px;
           font-weight: 500;
-          box-shadow: 0 2px 8px rgba(24, 144, 255, 0.15);
+          box-shadow: 0 2px 8px rgba(19, 194, 194, 0.15);
           transition: all 0.3s ease;
-          
-          &:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(24, 144, 255, 0.25);
-          }
           
           .el-icon {
             font-size: 14px;
@@ -190,13 +225,6 @@ refreshHistory()
             padding: 0;
             color: white;
             animation: pulse 2s infinite;
-          }
-
-          span {
-            background: none;
-            color: white;
-            font-size: 13px;
-            font-weight: normal;
           }
         }
 
@@ -217,17 +245,79 @@ refreshHistory()
 
         .count-tag {
           margin-left: 8px;
+          background: #f6ffed;
+          border-color: #b7eb8f;
+          color: #52c41a;
         }
 
         .header-actions {
           margin-left: auto;
           
           .el-button {
+            background: #52c41a;
+            border-color: #52c41a;
             transition: all 0.3s ease;
             
             &:hover {
               transform: translateY(-2px);
-              box-shadow: 0 4px 12px rgba(19, 194, 194, 0.2);
+              background: #73d13d;
+              border-color: #73d13d;
+              box-shadow: 0 4px 12px rgba(82, 196, 26, 0.2);
+            }
+          }
+        }
+      }
+
+      .section-content {
+        overflow: visible;
+        padding: 20px;
+
+        :deep(.el-table) {
+          .el-table__header {
+            th {
+              background-color: #f6ffed;
+              color: #1f2329;
+              font-weight: 600;
+              padding: 12px 0;
+            }
+          }
+
+          .el-table__row {
+            td {
+              padding: 12px 0;
+            }
+
+            &:hover > td {
+              background-color: #f6ffed !important;
+            }
+          }
+
+          .price-column {
+            color: #52c41a;
+            font-weight: 500;
+          }
+
+          .el-button {
+            padding: 8px 16px;
+            
+            &.el-button--primary {
+              background: #52c41a;
+              border-color: #52c41a;
+
+              &:hover {
+                background: #73d13d;
+                border-color: #73d13d;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(82, 196, 26, 0.2);
+              }
+            }
+          }
+
+          .el-tag {
+            &.el-tag--success {
+              background: #f6ffed;
+              border-color: #b7eb8f;
+              color: #52c41a;
             }
           }
         }

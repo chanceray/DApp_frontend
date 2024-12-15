@@ -10,20 +10,27 @@
       </div>
     </div>
 
-    <div class="content-container">
-      <div class="section">
-        <div class="section-header">
-          <el-icon><Monitor /></el-icon>
-          <span>二手车上报信息</span>
+    <div class="content-wrapper">
+      <div class="content-container">
+        <div class="section">
+          <div class="section-header">
+            <el-icon><Monitor /></el-icon>
+            <span>二手车上报信息</span>
+          </div>
+          <div class="section-content">
+            <car-report></car-report>
+          </div>
         </div>
-        <car-report></car-report>
-      </div>
-      <div class="section">
-        <div class="section-header">
-          <el-icon><User /></el-icon>
-          <span>用户信息汇总</span>
+        
+        <div class="section">
+          <div class="section-header">
+            <el-icon><User /></el-icon>
+            <span>用户信息汇总</span>
+          </div>
+          <div class="section-content">
+            <user-infos></user-infos>
+          </div>
         </div>
-        <user-infos></user-infos>
       </div>
     </div>
   </div>
@@ -50,9 +57,11 @@ _getAllCheckCars()
 <style lang="less" scoped>
 .price-watch {
   height: 100%;
-  background-color: #f0f5ff;
+  display: flex;
+  flex-direction: column;
   
   .page-header {
+    flex-shrink: 0;
     padding: 24px 32px;
     background: linear-gradient(135deg, #1890ff, #36cfc9);
     
@@ -87,7 +96,35 @@ _getAllCheckCars()
     }
   }
 
+  .content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+    background-color: #f0f5ff;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f0f5ff;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #d9e6ff;
+      border-radius: 4px;
+      
+      &:hover {
+        background: #1890ff;
+      }
+    }
+  }
+
   .content-container {
+    flex: 1;
     padding: 24px 32px;
     display: flex;
     flex-direction: column;
@@ -97,7 +134,7 @@ _getAllCheckCars()
       background: white;
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(24, 144, 255, 0.1);
-      overflow: hidden;
+      overflow: visible;
 
       .section-header {
         display: flex;
@@ -120,6 +157,11 @@ _getAllCheckCars()
           font-weight: 600;
           color: #1f2329;
         }
+      }
+
+      .section-content {
+        overflow: visible;
+        padding: 0;
       }
     }
   }

@@ -1,64 +1,38 @@
 <template>
   <div class="car-table">
     <el-table 
-      :data="carDatas" 
+      :data="tableData" 
       style="width: 100%"
-      :header-cell-style="tableHeaderStyle"
-      border
+      :stripe="true"
+      :border="true"
       highlight-current-row
-      @row-click="handleRowClick"
     >
-      <el-table-column prop="CarId" label="车架号" width="180" show-overflow-tooltip />
-      <el-table-column prop="CarBrand" label="品牌" width="100" />
-      <el-table-column prop="CarName" label="车型" width="140" show-overflow-tooltip />
-      <el-table-column label="车况信息" width="180">
+      <el-table-column prop="index" label="序号" width="80" align="center" />
+      <el-table-column prop="CarId" label="车架号" min-width="180" />
+      <el-table-column prop="CarBrand" label="品牌" min-width="120" />
+      <el-table-column prop="CarName" label="车型" min-width="120" />
+      <el-table-column prop="Engin" label="发动机型号" min-width="120" />
+      <el-table-column prop="Domestic" label="是否国产" width="100" align="center">
         <template #default="{ row }">
-          <div class="car-status">
-            <el-tag :type="row.SecondHandLevel ? 'warning' : 'success'" size="small">
-              {{ row.SecondHandLevel ? '二手' : '新车' }}
-            </el-tag>
-            <el-tag type="info" size="small">
-              {{ row.Domestic ? '国产' : '进口' }}
-            </el-tag>
-          </div>
+          <el-tag :type="row.Domestic === '是' ? 'success' : 'info'">
+            {{ row.Domestic }}
+          </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="Engin" label="发动机型号" width="120" show-overflow-tooltip />
-      <el-table-column prop="GuidePrice" label="售价" width="120">
+      <el-table-column prop="GuidePrice" label="售价" width="120" align="right">
         <template #default="{ row }">
-          <span class="price">¥ {{ row.GuidePrice }}</span>
+          <span class="price-column">¥ {{ row.GuidePrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="ExDate" label="上架时间" width="160" />
-      <el-table-column label="操作" fixed="right" width="200">
+      <el-table-column prop="ExDate" label="上架时间" width="180" align="center" />
+      <el-table-column label="操作" width="200" fixed="right" align="center">
         <template #default="{ row }">
-          <div class="action-buttons">
-            <el-tooltip content="查看车辆图片" placement="top">
-              <el-button type="primary" circle @click.stop="detail(row)">
-                <el-icon><Picture /></el-icon>
-              </el-button>
-            </el-tooltip>
-            <el-tooltip content="维修记录" placement="top">
-              <el-button type="warning" circle @click.stop="showServiceLog(row)">
-                <el-icon><Tools /></el-icon>
-              </el-button>
-            </el-tooltip>
-            <el-tooltip content="购买车辆" placement="top">
-              <el-button 
-                type="success" 
-                circle
-                @click.stop="handleBuy(row)"
-              >
-                <el-icon><ShoppingCart /></el-icon>
-              </el-button>
-            </el-tooltip>
-          </div>
+          <el-button type="primary" size="small" @click="handleView(row)">
+            查看详情
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
-
-    <img-dia ref="imgDiaRef" />
-    <service-log ref="serviceLogRef" />
   </div>
 </template>
 
@@ -124,46 +98,36 @@ const handleRowClick = (row) => {
 
 <style lang="less" scoped>
 .car-table {
-  .car-status {
-    display: flex;
-    gap: 8px;
-  }
-
-  .price {
-    color: #f56c6c;
-    font-weight: bold;
-    font-size: 15px;
-  }
-
-  .action-buttons {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-
-    .el-button {
-      padding: 8px;
-      transition: all 0.3s ease;
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      }
-    }
-  }
+  height: 100%;
+  background-color: white;
 
   :deep(.el-table) {
-    border-radius: 8px;
-    overflow: hidden;
+    background-color: transparent;
     
-    .el-table__row {
-      transition: all 0.3s ease;
-      
-      &:hover {
-        background-color: #f5f7fa;
-        td {
-          background-color: transparent;
-        }
+    .el-table__header {
+      th {
+        background-color: #f6ffed;
+        color: #1f2329;
+        font-weight: 600;
+        padding: 12px 0;
       }
+    }
+
+    .el-table__row {
+      td {
+        padding: 12px 0;
+        background-color: transparent;
+      }
+
+      &:hover > td {
+        background-color: #f6ffed !important;
+      }
+    }
+
+    .price-column {
+      color: #52c41a;
+      font-weight: 500;
+      font-size: 15px;
     }
 
     .el-tag {
@@ -171,6 +135,35 @@ const handleRowClick = (row) => {
       padding: 0 8px;
       height: 24px;
       line-height: 24px;
+
+      &.el-tag--success {
+        background: #f6ffed;
+        border-color: #b7eb8f;
+        color: #52c41a;
+      }
+
+      &.el-tag--info {
+        background: #f5f5f5;
+        border-color: #d9d9d9;
+        color: #666;
+      }
+    }
+
+    .el-button {
+      padding: 8px 16px;
+      transition: all 0.3s ease;
+
+      &.el-button--primary {
+        background: #52c41a;
+        border-color: #52c41a;
+
+        &:hover {
+          background: #73d13d;
+          border-color: #73d13d;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(82, 196, 26, 0.2);
+        }
+      }
     }
   }
 }
