@@ -6,8 +6,8 @@
       <el-table-column prop="CarName" label="车辆名称" />
       <el-table-column prop="CarBrand" label="车辆品牌" />
       <el-table-column prop="Engin" label="发动机型号" />
-      <el-table-column prop="Domestic" label="是否国产" />
-      <el-table-column prop="SecondHandLevel" label="是否二手">
+      <el-table-column prop="Domestic" label="是否为国产车" />
+      <el-table-column prop="SecondHandLevel" label="是否为二手车">
         <template #default="{ row }">
           {{ Number(row.SecondHandLevel) ? '是' : '否' }}
         </template>

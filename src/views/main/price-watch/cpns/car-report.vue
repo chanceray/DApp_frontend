@@ -37,7 +37,7 @@
         <el-table-column prop="CarId" label="车架号" width="200" />
         <el-table-column prop="CarClass" label="车型级别" align="center" />
         <el-table-column prop="CarBrand" label="车辆品牌" align="center" />
-        <el-table-column prop="loss_amount" label="评估折损量" align="center">
+        <el-table-column prop="loss_amount" label="折损量评估" align="center">
           <template #default="{ row }">
             <el-tag :type="row.loss_amount > 50 ? 'danger' : 'success'">
               {{ row.loss_amount }}%

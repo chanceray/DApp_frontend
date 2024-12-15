@@ -12,7 +12,7 @@
 
       <el-table-column prop="address" label="地址" />
       <el-table-column prop="Identity" label="身份证号" />
-      <el-table-column prop="amount" label="名下资产数" width="180" />
+      <el-table-column prop="amount" label="名下资产量" width="180" />
     </el-table>
   </div>
 </template>
