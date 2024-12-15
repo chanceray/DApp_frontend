@@ -3,15 +3,15 @@
     <!-- logo -->
     <div class="logo">
       <img class="img" src="~@/assets/img/main/car.png" alt="" />
-      <span v-if="isCollapse" class="title">二手车信息溯源系统</span>
+      <span v-if="isCollapse" class="title">车迹通</span>
     </div>
     <!-- 菜单 -->
     <el-menu
       :default-active="defaultActive"
-      class="el-menu-vertical"
-      background-color="#0c2135"
-      text-color="#b7bdc3"
-      active-text-color="#0a60bd"
+      class="el-menu-vertical" 
+      background-color="#f9f9f9"
+      text-color="#666"
+      active-text-color="#4892fe"
       :collapse="!isCollapse"
       unique-opened
       @select="menuSelect"
@@ -23,7 +23,7 @@
             <!-- 一级菜单 -->
             <template #title>
               <component :class="item.icon" :is="item.icon"></component>
-              <span>{{ item.displayName }}11</span>
+              <span>{{ item.displayName }}</span>
             </template>
             <!-- 二级菜单 -->
             <template v-for="subitem in item.children" :key="subitem.id">
@@ -87,25 +87,27 @@ const menuSelect = (event) => {
 .nav-menu {
   height: 100%;
   background-color: #f9f9f9;
+  box-shadow: 0 1px 4px rgba(0,21,41,0.08);
 
   .logo {
     display: flex;
-    height: 28px;
-    padding: 8px 10px 8px 10px;
+    height: 32px;
+    padding: 12px;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    // margin-bottom: 30px;
+    border-bottom: 1px solid #f0f0f0;
 
     .img {
       height: 100%;
-      margin: 0px 10px;
-      margin-left: 10px;
+      margin: 0 10px;
     }
 
     .title {
-      // font-size: 30px;
-      font-weight: bold;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      letter-spacing: 1px;
     }
   }
 
@@ -114,61 +116,66 @@ const menuSelect = (event) => {
     background: #f9f9f9;
 
     .el-menu-item {
-      border-radius: 9px !important;
-      color: #969b9f;
+      height: 50px;
+      line-height: 50px;
+      margin: 4px 8px;
+      border-radius: 4px;
+      color: #666;
+      transition: all 0.3s;
 
       .icon {
         display: flex;
         padding: 6px;
+        transition: all 0.3s;
       }
 
-      // 修改菜单图标大小
       svg {
-        width: 17px;
-        height: 17px;
+        width: 16px;
+        height: 16px;
       }
     }
   }
 
-  // 目录
   .el-submenu {
-    background-color: #001429 !important;
-    // 二级菜单 ( 默认背景 )
     .el-menu-item {
-      padding-left: 50px !important;
+      padding-left: 45px !important;
       background-color: #f9f9f9 !important;
+      margin: 2px 8px;
     }
   }
 
   :deep(.el-sub-menu__title) {
-    background-color: #f9f9f9 !important;
+    height: 50px;
+    line-height: 50px;
+    margin: 4px 8px;
+    border-radius: 4px;
+    color: #666;
 
-    .el-icon.el-sub-menu__icon-arrow {
-      position: absolute;
+    &:hover {
+      background-color: #fff !important;
     }
 
-    // 修改菜单图标大小
     svg {
-      width: 15px;
-      height: 15px;
-      margin-right: 5px;
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
     }
   }
 
-  // hover 高亮
   .el-menu-item:hover {
-    color: #000 !important; // 菜单
+    color: #4892fe !important;
     background-color: #fff !important;
   }
 
-  // 选中之后菜单高亮颜色
   .el-menu-item.is-active {
-    color: #000 !important;
+    color: #4892fe !important;
     background-color: #fff !important;
+    font-weight: 500;
+
     .icon {
       background-color: #4892fe;
-      border-radius: 3px;
-      margin-right: 10px;
+      border-radius: 4px;
+      margin-right: 8px;
       color: #fff;
     }
   }
@@ -176,6 +183,7 @@ const menuSelect = (event) => {
 
 .el-menu-vertical:not(.el-menu--collapse) {
   width: 100%;
-  height: calc(100% - 48px);
+  height: calc(100% - 57px);
+  padding: 8px 0;
 }
 </style>

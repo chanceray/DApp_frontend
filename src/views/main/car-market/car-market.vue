@@ -1,49 +1,57 @@
 <template>
   <div class="car-market">
-    <div class="market-container">
-      <!-- 搜索区域 -->
-      <div class="search-section">
+    <div class="page-header">
+      <div class="header-content">
+        <el-icon class="header-icon"><Shop /></el-icon>
+        <div class="title-content">
+          <h2>汽车市场</h2>
+          <span class="subtitle">智能汽车交易平台</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-container">
+      <div class="section">
         <div class="section-header">
-          <h2 class="section-title">
-            <el-icon><Monitor /></el-icon>
-            智能汽车交易平台
-          </h2>
-          <div class="header-right">
-            <el-tag type="info" effect="dark">
-              <el-icon><Timer /></el-icon>
-              实时更新
-            </el-tag>
+          <el-icon><Search /></el-icon>
+          <span>车辆搜索</span>
+          <div class="live-update">
+            <el-icon><Timer /></el-icon>
+            <span>实时更新</span>
           </div>
         </div>
         <car-search></car-search>
       </div>
 
-      <!-- 在售车辆列表 -->
-      <div class="list-section">
+      <div class="section">
         <div class="section-header">
-          <div class="header-left">
-            <el-icon><CarFilled /></el-icon>
-            <h3>在售车辆</h3>
-            <el-tag type="success" size="small">{{ carDatas.length }}辆</el-tag>
+          <el-icon><Van /></el-icon>
+          <span>在售车辆</span>
+          <el-tag type="success" size="small" class="count-tag">
+            {{ carDatas.length }}辆
+          </el-tag>
+          <div class="header-actions">
+            <el-button type="primary" :icon="Refresh" size="small" @click="refreshList">
+              刷新列表
+            </el-button>
           </div>
-         
-            
-        
         </div>
-    
+        <car-table v-if="viewMode === 'table'"></car-table>
+        <car-grid v-else></car-grid>
       </div>
 
-      <!-- 交易历史 -->
-      <div class="history-section">
+      <div class="section">
         <div class="section-header">
-          <div class="header-left">
-            <el-icon><Histogram /></el-icon>
-            <h3>交易记录</h3>
-            <el-tag type="info" size="small">{{ historyData.length }}笔</el-tag>
+          <el-icon><Histogram /></el-icon>
+          <span>交易记录</span>
+          <el-tag type="info" size="small" class="count-tag">
+            {{ historyData.length }}笔
+          </el-tag>
+          <div class="header-actions">
+            <el-button type="primary" :icon="Refresh" size="small" @click="refreshHistory">
+              刷新记录
+            </el-button>
           </div>
-          <el-button type="primary" :icon="Refresh" size="small" @click="refreshHistory">
-            刷新记录
-          </el-button>
         </div>
         <trade-history></trade-history>
       </div>
@@ -56,21 +64,16 @@ import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import { CarSearch, CarTable, CarGrid, TradeHistory } from './cpns/index'
 import { 
-  Monitor, 
+  Shop, 
+  Search,
   Timer, 
-  CarFilled, 
+  Van,
   Histogram, 
-  Refresh,
-  Grid,
-  List
+  Refresh
 } from '@element-plus/icons-vue'
 
 const store = useStore()
-const viewMode = ref('table') // 默认表格视图
-
-const toggleViewMode = () => {
-  viewMode.value = viewMode.value === 'table' ? 'grid' : 'table'
-}
+const viewMode = ref('table')
 
 const carDatas = computed(() => store.state.carMarket.allSaleCars)
 const historyData = computed(() => store.state.carMarket.historeInfos)
@@ -83,88 +86,151 @@ const refreshHistory = () => {
   store.dispatch('carMarket/tradeHistoryListAction')
 }
 
-// 初始化数据
 refreshList()
 refreshHistory()
 </script>
 
 <style lang="less" scoped>
 .car-market {
-  width: 100%;
   height: 100%;
-  background-color: #f0f2f5;
-  padding: 20px;
-  box-sizing: border-box;
-
-  .market-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-
-    .section-title {
-      color: #1a1a1a;
-      margin: 0;
-      font-weight: 600;
-      font-size: 24px;
+  background-color: #f0f5ff;
+  
+  .page-header {
+    padding: 24px 32px;
+    background: linear-gradient(135deg, #13c2c2, #52c41a);
+    
+    .header-content {
       display: flex;
       align-items: center;
-      gap: 8px;
-    }
+      gap: 16px;
 
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
+      .header-icon {
+        font-size: 32px;
+        color: white;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 10px;
+        border-radius: 10px;
+        backdrop-filter: blur(4px);
+      }
 
-      .header-left {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-
-        h3 {
+      .title-content {
+        h2 {
           margin: 0;
-          color: #1a1a1a;
-          font-weight: 500;
+          font-size: 24px;
+          color: white;
+          font-weight: 600;
+        }
+
+        .subtitle {
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.85);
+          margin-top: 4px;
         }
       }
     }
+  }
 
-    .search-section,
-    .list-section,
-    .history-section {
-      background: #fff;
-      padding: 24px;
+  .content-container {
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .section {
+      background: white;
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    }
+      box-shadow: 0 4px 20px rgba(19, 194, 194, 0.1);
+      overflow: hidden;
 
-    .list-section {
-      flex: 2;
-    }
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 20px 24px;
+        background: #fafcff;
+        border-bottom: 1px solid #e6f0ff;
+        position: relative;
 
-    .history-section {
-      flex: 1;
-    }
+        .el-icon {
+          font-size: 20px;
+          color: #13c2c2;
+          background: #e6fffb;
+          padding: 8px;
+          border-radius: 8px;
+        }
 
-    :deep(.el-icon) {
-      font-size: 18px;
-      vertical-align: middle;
-    }
+        span {
+          font-size: 16px;
+          font-weight: 600;
+          color: #1f2329;
+        }
 
-    :deep(.el-button-group) {
-      .el-button {
-        margin-left: -1px;
-      }
-    }
+        .live-update {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          margin-left: 12px;
+          background: linear-gradient(135deg, #1890ff, #36cfc9);
+          padding: 6px 14px;
+          border-radius: 20px;
+          color: white;
+          font-size: 13px;
+          font-weight: 500;
+          box-shadow: 0 2px 8px rgba(24, 144, 255, 0.15);
+          transition: all 0.3s ease;
+          
+          &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(24, 144, 255, 0.25);
+          }
+          
+          .el-icon {
+            font-size: 14px;
+            background: none;
+            padding: 0;
+            color: white;
+            animation: pulse 2s infinite;
+          }
 
-    :deep(.el-tag) {
-      border-radius: 4px;
-      
-      .el-icon {
-        margin-right: 4px;
-        font-size: 14px;
+          span {
+            background: none;
+            color: white;
+            font-size: 13px;
+            font-weight: normal;
+          }
+        }
+
+        @keyframes pulse {
+          0% {
+            opacity: 1;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.7;
+            transform: scale(1.1);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        .count-tag {
+          margin-left: 8px;
+        }
+
+        .header-actions {
+          margin-left: auto;
+          
+          .el-button {
+            transition: all 0.3s ease;
+            
+            &:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 4px 12px rgba(19, 194, 194, 0.2);
+            }
+          }
+        }
       }
     }
   }
