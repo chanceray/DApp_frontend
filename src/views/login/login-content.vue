@@ -1,58 +1,93 @@
 <template>
-  <div class="login-content">
-    <div class="title">
-      <div class="name">二手车信息溯源系统</div>
-      <div class="img">
-        <img src="../../assets/img/login/login_left.png" alt="" />
-      </div>
+  <div class="login-card">
+    <div class="card-header">
+      <img src="@/assets/img/logo.png" alt="Logo" class="logo" />
+    <h1 class="title">车迹通</h1>
+    <p class="tagline">极速追踪，掌控未来</p>
     </div>
-    <div class="login-account">
-      <div class="content">
-        <div class="welcome">
-          <div class="text">欢迎登录</div>
-        </div>
-        <el-form
-          ref="formRef"
-          :model="account"
-          :rules="rules"
-          label-width="0"
-          class="demo-ruleForm"
-          status-icon
+    <el-form
+      ref="formRef"
+      :model="account"
+      :rules="rules"
+      class="login-form"
+      label-width="0"
+      status-icon
+    >
+      <!-- 用户角色选择 -->
+      <RoleSelector
+      v-model="account.usertype"
+      />
+
+      <!-- 账号输入框 -->
+      <el-form-item prop="account">
+        <el-input
+          v-model="account.account"
+          placeholder="请输入账号"
+          :prefix-icon="User"
+          class="input-with-icon"
         >
-          <el-form-item label="" prop="usertype">
-            <el-select style="width: 100%" v-model="account.usertype" placeholder="请选择用户角色">
-              <template v-for="(item, index) in roles" :key="index">
-                <el-option :label="item.name" :value="item.value" />
-              </template>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="" prop="account">
-            <el-input v-model="account.account" placeholder="请输入账号" :prefix-icon="User" />
-          </el-form-item>
-          <el-form-item label="" prop="password">
-            <el-input
-              placeholder="请输入密码"
-              v-model="account.password"
-              :prefix-icon="Lock"
-              show-password
-            />
-          </el-form-item>
-        </el-form>
-        <div class="no-account">
-          <div class="remember-password">
-            <el-checkbox v-model="isRemember" label="记住密码" size="large" />
-          </div>
-          <div class="login-btn" @click="handleLogin">登录</div>
-          <div class="login-btn" @click="handleRegister">注册</div>
-          <div class="forget-password">忘记密码</div>
-        </div>
+          <template #suffix>
+            <el-tooltip content="请输入您的账号" placement="top">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+          </template>
+        </el-input>
+      </el-form-item>
+
+      <!-- 密码输入框 -->
+      <el-form-item prop="password">
+        <el-input
+          v-model="account.password"
+          placeholder="请输入密码"
+          :prefix-icon="Lock"
+          show-password
+          class="input-with-icon"
+        >
+          <template #suffix>
+            <el-tooltip content="密码至少包含6位字符" placement="top">
+              <i class="el-icon-info"></i>
+            </el-tooltip>
+          </template>
+        </el-input>
+      </el-form-item>
+
+      <!-- 记住密码和忘记密码 -->
+      <div class="form-options">
+        <el-checkbox v-model="isRemember" size="large" class="checkbox">
+          记住密码
+        </el-checkbox>
+        <a href="#" class="forget-password" @click="handleForgotPassword">
+          忘记密码？
+        </a>
       </div>
-    </div>
+
+      <!-- 按钮 -->
+      <div class="form-buttons">
+        <el-button
+          type="primary"
+          size="large"
+          class="login-button"
+          @click="handleLogin"
+        >
+          登录
+        </el-button>
+        <el-button
+          type="success"
+          size="large"
+          class="register-button"
+          @click="handleRegister"
+        >
+          注册
+        </el-button>
+      </div>
+    </el-form>
   </div>
 </template>
 
+
 <script setup>
-import { ref, reactive } from 'vue'
+import RoleSelector from '@/components/RoleSelector.vue'
+import { ref, reactive, computed } from 'vue';
 import { rules } from './config/login.config'
 import { useStore } from 'vuex'
 import { User, Lock } from '@element-plus/icons-vue'
@@ -90,97 +125,138 @@ const handleRegister = () => {
 </script>
 
 <style lang="less" scoped>
-.login-content {
-  background-color: #fff;
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css");
+
+/* 背景动画 */
+body {
+  background: linear-gradient(to right, #ffe259, #ffa751); /* 黄色渐变 */
+  animation: moveBg 5s linear infinite;
+}
+
+@keyframes moveBg {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+/* 登录卡片样式 */
+
+/* logo 样式 */
+.logo {
+  width: 150px; /* 控制 logo 大小 */
+  height: 150px; /* 控制 logo 高度 */
+  border-radius: 50%; /* 圆形边框 */
+  border: 5px solid white; /* 添加白色边框 */
+  box-shadow: 0 0 15px 5px rgba(255, 165, 0, 0.8); /* 黄色阴影发光效果 */
+  margin-bottom: 20px; /* 与文字的间距 */
+  transition: transform 0.3s ease-in-out; /* 动态效果 */
+}
+
+/* logo 悬停放大 */
+.logo:hover {
+  transform: scale(1.1); /* 放大效果 */
+}
+
+/* 标题样式 */
+.title {
+  font-size: 2rem;
+  color: rgb(222, 148, 22);
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* 副标题样式 */
+.tagline {
+  font-size: 1rem;
+  color: #fff;
+  text-align: center;
+  opacity: 0.9;
+}
+
+/* 背景动画 */
+@keyframes moveBg {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+.login-card {
   position: absolute;
-  left: 50%;
   top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
+  width: 400px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  padding: 2rem;
+  text-align: center;
+  animation: fadeIn 1s ease-out;
+}
 
-  display: flex;
-  .title {
-    font-size: 30px;
-    text-align: center;
-    color: #fff;
-    background-color: rgba(58, 98, 215, 0.9);
-    padding: 120px 30px;
 
-    .name {
-      position: relative;
-      bottom: -50px;
-    }
-
-    .img {
-      position: relative;
-      bottom: -50px;
-    }
+/* 按钮样式 */
+.login-button {
+  background: linear-gradient(135deg, rgba(255, 165, 0, 0.8), rgba(255, 140, 0, 0.9));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
   }
+}
 
-  .login-account {
-    width: 400px;
-    padding: 100px 100px;
-    position: relative;
-    .content {
-      width: 400px;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .welcome {
-      font-size: 26px;
-      font-weight: bold;
-      margin-bottom: 30px;
-      position: relative;
-
-      display: flex;
-      justify-content: center;
-
-      .text {
-        position: relative;
-        &::after {
-          content: '';
-          display: inline-block;
-          width: 100%;
-          height: 2px;
-          background-color: #3a62d7;
-          position: absolute;
-          left: 0;
-          bottom: -4px;
-        }
-      }
-    }
-
-    .no-account {
-      width: 100%;
-      .login-btn {
-        color: #fff;
-        width: 100%;
-        padding: 10px 0;
-        background-color: #3a62d7;
-        border-radius: 2px;
-        margin-bottom: 10px;
-        display: flex;
-        justify-content: center;
-
-        cursor: pointer;
-      }
-
-      .forget-password {
-        font-weight: bold;
-        font-size: 14px;
-        width: 100%;
-        color: #3a62d7;
-        display: flex;
-        justify-content: center;
-        cursor: pointer;
-      }
-    }
+.register-button {
+  background: linear-gradient(135deg, rgba(255, 198, 88, 0.8), rgba(255, 165, 0, 0.8));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
   }
+}
 
-  :deep(.el-icon.el-input__icon) {
-    color: #3a62d7 !important;
+/* 动态车轮样式 */
+.wheel-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.wheel {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  transform-origin: center center;
+  animation: rotate 0.5s linear infinite;
+}
+
+.wheel-icon {
+  font-size: 60px;
+  color: #ffa751;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 </style>
