@@ -44,8 +44,9 @@
           </div>
         </div>
 
+       
         <!-- 交易历史 -->
-        <div class="section">
+      <!--   <div class="section">
           <div class="section-header">
             <el-icon><Histogram /></el-icon>
             <span>交易记录</span>
@@ -59,10 +60,10 @@
           <div class="section-content">
             <trade-history></trade-history>
           </div>
-        </div>
-      </div>
+        </div> -->
+       </div>
     </div>
-  </div>
+  </div>  
 </template>
 
 <script setup>
