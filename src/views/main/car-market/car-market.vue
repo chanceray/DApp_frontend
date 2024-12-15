@@ -26,15 +26,12 @@
             <car-search></car-search>
           </div>
         </div>
-
         <!-- 在售车辆列表 -->
         <div class="section">
           <div class="section-header">
             <el-icon><Van /></el-icon>
             <span>在售车辆</span>
-            <el-tag type="success" size="small" class="count-tag">
-              {{ carDatas.length }}辆
-            </el-tag>
+            
             <div class="header-actions">
               <el-button type="primary" :icon="Refresh" @click="refreshList">
                 刷新列表
@@ -52,9 +49,7 @@
           <div class="section-header">
             <el-icon><Histogram /></el-icon>
             <span>交易记录</span>
-            <el-tag type="info" size="small" class="count-tag">
-              {{ historyData.length }}笔
-            </el-tag>
+           
             <div class="header-actions">
               <el-button type="primary" :icon="Refresh" @click="refreshHistory">
                 刷新记录
@@ -71,8 +66,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
+import { eventBus } from '@/utils/eventbus'
 import { CarSearch, CarTable, CarGrid, TradeHistory } from './cpns/index'
 import { 
   Shop, 
@@ -97,8 +93,16 @@ const refreshHistory = () => {
   store.dispatch('carMarket/tradeHistoryListAction')
 }
 
-refreshList()
-refreshHistory()
+// 组件挂载时获取数据
+onMounted(() => {
+  refreshList()
+  refreshHistory()
+})
+
+// 组件卸载时移除事件监听
+onUnmounted(() => {
+  eventBus.off(eventBus.CAR_UPLOADED, refreshList)
+})
 </script>
 
 <style lang="less" scoped>

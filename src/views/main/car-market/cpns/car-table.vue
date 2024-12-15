@@ -1,7 +1,7 @@
 <template>
   <div class="car-table">
     <el-table 
-      :data="tableData" 
+      :data="carDatas" 
       style="width: 100%"
       :stripe="true"
       :border="true"
@@ -25,14 +25,30 @@
         </template>
       </el-table-column>
       <el-table-column prop="ExDate" label="上架时间" width="180" align="center" />
-      <el-table-column label="操作" width="200" fixed="right" align="center">
+      <el-table-column label="操作" width="280" fixed="right" align="center">
         <template #default="{ row }">
-          <el-button type="primary" size="small" @click="handleView(row)">
-            查看详情
-          </el-button>
+          <div class="action-buttons">
+            <el-button type="primary" size="small" @click="handleView(row)">
+              <el-icon><View /></el-icon>
+              图片
+            </el-button>
+            <el-button type="success" size="small" @click="handleBuy(row)">
+              <el-icon><ShoppingCart /></el-icon>
+              购买
+            </el-button>
+            <el-button type="warning" size="small" @click="showServiceLog(row)">
+              <el-icon><Tools /></el-icon>
+              维修
+            </el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
+
+    <!-- 图片弹窗 -->
+    <img-dia ref="imgDiaRef"></img-dia>
+    <!-- 维修记录弹窗 -->
+    <service-log ref="serviceLogRef"></service-log>
   </div>
 </template>
 
@@ -40,26 +56,16 @@
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
-import { Picture, Tools, ShoppingCart } from '@element-plus/icons-vue'
+import { View, ShoppingCart, Tools } from '@element-plus/icons-vue'
 import { ImgDia, ServiceLog } from '../cpns/index'
 
 const store = useStore()
 const userInfo = store.state.login.userInfo
-const carDatas = computed(() => {
-  return store.state.carMarket.allSaleCars
-})
+const carDatas = computed(() => store.state.carMarket.allSaleCars)
 const imgDiaRef = ref(null)
 const serviceLogRef = ref(null)
 
-const tableHeaderStyle = {
-  background: '#fafafa',
-  color: '#1a1a1a',
-  fontWeight: '500',
-  fontSize: '14px',
-  height: '50px'
-}
-
-const detail = (data) => {
+const handleView = (data) => {
   imgDiaRef.value.show(data)
 }
 
@@ -88,11 +94,6 @@ const handleBuy = (row) => {
   ).then(() => {
     buy(row)
   })
-}
-
-const handleRowClick = (row) => {
-  // 点击行时的效果
-  console.log('查看车辆详情:', row)
 }
 </script>
 
@@ -149,19 +150,51 @@ const handleRowClick = (row) => {
       }
     }
 
-    .el-button {
-      padding: 8px 16px;
-      transition: all 0.3s ease;
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
 
-      &.el-button--primary {
-        background: #52c41a;
-        border-color: #52c41a;
+      .el-button {
+        padding: 8px 16px;
+        
+        .el-icon {
+          margin-right: 4px;
+        }
+
+        &.el-button--primary {
+          background: #52c41a;
+          border-color: #52c41a;
+
+          &:hover {
+            background: #73d13d;
+            border-color: #73d13d;
+          }
+        }
+
+        &.el-button--success {
+          background: #13c2c2;
+          border-color: #13c2c2;
+
+          &:hover {
+            background: #36cfc9;
+            border-color: #36cfc9;
+          }
+        }
+
+        &.el-button--warning {
+          background: #fa8c16;
+          border-color: #fa8c16;
+
+          &:hover {
+            background: #ffa940;
+            border-color: #ffa940;
+          }
+        }
 
         &:hover {
-          background: #73d13d;
-          border-color: #73d13d;
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(82, 196, 26, 0.2);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
       }
     }

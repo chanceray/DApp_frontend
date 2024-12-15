@@ -35,6 +35,10 @@ import { Plus, Upload, List, Refresh } from '@element-plus/icons-vue'
 const store = useStore()
 const addCarRef = ref(null)
 
+const handleAddCar = () => {
+  addCarRef.value?.handleSubmit()
+}
+
 const refreshList = () => {
   store.dispatch('carIndex/getAllCarAction')
 }

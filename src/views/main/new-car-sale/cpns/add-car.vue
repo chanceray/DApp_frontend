@@ -102,7 +102,7 @@
 
           <!-- 添加提交按钮 -->
           <div class="submit-section">
-            <el-button type="primary" :icon="Plus" @click="submit" size="large">
+            <el-button type="primary" :icon="Plus" @click="handleSubmit" size="large">
               确认上链
             </el-button>
           </div>
@@ -119,6 +119,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { rules } from '../config/add.config'
 import { useStore } from 'vuex'
 import moment from 'moment'
+import { eventBus } from '@/utils/eventbus'  // 导入eventBus
 
 const store = useStore()
 const formRef = ref(null)
@@ -136,7 +137,7 @@ const addForm = ref({
   manufacture: ''
 })
 
-const submit = () => {
+const handleSubmit = () => {
   if (!imgSrc.value) {
     ElMessage({
       message: '请上传图片',
@@ -161,6 +162,13 @@ const submit = () => {
           GuidePrice: '',
           manufacture: ''
         }
+        formRef.value?.resetFields()
+        eventBus.emit(eventBus.CAR_UPLOADED)
+        
+        ElMessage({
+          type: 'success',
+          message: '车辆信息上链成功'
+        })
       })
     }
   })
@@ -202,9 +210,10 @@ const handleReset = () => {
   }).catch(() => {})
 }
 
-// 暴露submit方法给父组件
+// 暴露方法给父组件
 defineExpose({
-  submit
+  handleSubmit,
+  handleReset
 })
 </script>
 
