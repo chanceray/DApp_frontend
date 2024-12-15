@@ -1,16 +1,8 @@
 <template>
   <div class="register-content">
-    <div class="title">
-      <div class="name">二手车信息溯源系统</div>
-      <div class="img">
-        <img src="../../assets/img/login/login_left.png" alt="" />
-      </div>
-    </div>
-    <div class="register-account">
-      <div class="content">
-        <div class="welcome">
-          <div class="text">信息注册</div>
-        </div>
+
+      <div class="register-card ">
+        <h1 class="title">信息注册</h1>
         <el-form
           ref="formRef"
           :model="account"
@@ -19,13 +11,9 @@
           class="demo-ruleForm"
           status-icon
         >
-          <el-form-item label="" prop="usertype">
-            <el-select style="width: 100%" v-model="account.usertype" placeholder="请选择用户角色">
-              <template v-for="(item, index) in roles" :key="index">
-                <el-option :label="item.name" :value="item.value" />
-              </template>
-            </el-select>
-          </el-form-item>
+        <RoleSelector
+        v-model="account.usertype"
+        />
           <el-form-item label="" prop="account">
             <el-input v-model="account.account" placeholder="请输入用户名" :prefix-icon="User" />
           </el-form-item>
@@ -53,16 +41,31 @@
             <el-input v-model="account.Identity" placeholder="请输入身份证号" :prefix-icon="User" />
           </el-form-item>
         </el-form>
-        <div class="no-account">
-          <div class="login-btn" @click="handleRegister">注册</div>
-          <div class="login-btn" @click="handleLogin">登录</div>
-        </div>
+        <div class="form-buttons">
+        <el-button
+          type="primary"
+          size="large"
+          class="login-button"
+          @click="handleLogin"
+        >
+          登录
+        </el-button>
+        <el-button
+          type="success"
+          size="large"
+          class="register-button"
+          @click="handleRegister"
+        >
+          注册
+        </el-button>
       </div>
-    </div>
+      </div>
+
   </div>
 </template>
 
 <script setup>
+import RoleSelector from '@/components/RoleSelector.vue'
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { rules } from './config/register.config'
@@ -108,36 +111,36 @@ const handleLogin = () => {
 </script>
 
 <style lang="less" scoped>
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css");
+.register-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(255, 165, 0, 0.2);
+  padding: 2rem;
+  text-align: center;
+  animation: fadeIn 1s ease-out;
+}
+
 .register-content {
   background-color: #fff;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-
   display: flex;
-  .title {
-    font-size: 30px;
-    text-align: center;
-    color: #fff;
-    background-color: rgba(58, 98, 215, 0.9);
-    padding: 120px 30px;
 
-    .name {
-      position: relative;
-      bottom: -50px;
-    }
 
-    .img {
-      position: relative;
-      bottom: -50px;
-    }
-  }
 
   .register-account {
     width: 400px;
     padding: 100px 100px;
     position: relative;
+    
     .content {
       width: 400px;
       position: absolute;
@@ -151,7 +154,6 @@ const handleLogin = () => {
       font-weight: bold;
       margin-bottom: 20px;
       position: relative;
-
       display: flex;
       justify-content: center;
 
@@ -162,7 +164,7 @@ const handleLogin = () => {
           display: inline-block;
           width: 100%;
           height: 2px;
-          background-color: #3a62d7;
+          background-color: rgba(255, 165, 0, 0.8);
           position: absolute;
           left: 0;
           bottom: -4px;
@@ -176,12 +178,11 @@ const handleLogin = () => {
         color: #fff;
         width: 100%;
         padding: 10px 0;
-        background-color: #3a62d7;
+        background-color: rgba(255, 165, 0, 0.8);
         border-radius: 2px;
         margin-bottom: 10px;
         display: flex;
         justify-content: center;
-
         cursor: pointer;
       }
 
@@ -189,7 +190,7 @@ const handleLogin = () => {
         font-weight: bold;
         font-size: 14px;
         width: 100%;
-        color: #3a62d7;
+        color: rgba(255, 165, 0, 0.8);
         display: flex;
         justify-content: center;
         cursor: pointer;
@@ -198,7 +199,40 @@ const handleLogin = () => {
   }
 
   :deep(.el-icon.el-input__icon) {
-    color: #3a62d7 !important;
+    color: rgba(255, 165, 0, 0.8) !important;
   }
+}
+
+/* 按钮样式 */
+.login-button {
+  background: linear-gradient(135deg, rgba(255, 165, 0, 0.8), rgba(255, 140, 0, 0.9));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
+  }
+}
+
+.register-button {
+  background: linear-gradient(135deg, rgba(255, 198, 88, 0.8), rgba(255, 165, 0, 0.8));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
+  }
+}
+.title {
+  font-size: 2rem;
+  color: rgb(222, 148, 22);
+  margin-bottom: 10px;
+  text-align: center;
 }
 </style>
