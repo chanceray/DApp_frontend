@@ -34,25 +34,37 @@ import { rules } from '../config/sale.config'
 import { useStore } from 'vuex'
 
 const store = useStore()
+// 控制弹窗显示状态
 const isShow = ref(false)
+// 表单引用
 const formRef = ref(null)
+// 存储当前车辆数据
 const carData = ref({})
+// 表单数据对象
 const formData = ref({
-  CarId: '', // Vin号
-  ExDate: '', // 创建日日期
+  CarId: '', // 车架号
+  ExDate: '', // 创建日期
   GuidePrice: '', // 期望售出价格
   CarAges: '', // 车龄
   LossAmount: '' // 折损评估数
 })
 
+/**
+ * 显示售出弹窗
+ * @param {Object} data - 车辆数据对象
+ */
 const show = (data) => {
   carData.value = data
+  // 初始化表单数据
   formData.value.CarId = data.CarId
   formData.value.ExDate = data.ExDate
   isShow.value = true
 }
 
-// 确认售出
+/**
+ * 确认售出
+ * 验证表单并提交售出请求
+ */
 const confirmSale = () => {
   formRef.value.validate(async (valid) => {
     if (valid) {
@@ -63,7 +75,9 @@ const confirmSale = () => {
   })
 }
 
-// 关闭弹窗清空表单内容
+/**
+ * 弹窗关闭时重置表单
+ */
 const diaClosed = () => {
   formData.value = {
     CarId: '',
@@ -74,6 +88,7 @@ const diaClosed = () => {
   }
 }
 
+// 暴露show方法给父组件
 defineExpose({
   show
 })

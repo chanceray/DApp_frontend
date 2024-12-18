@@ -67,6 +67,7 @@
 </template>
 
 <script setup>
+// 导入所需的组件和图标
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
 import { eventBus } from '@/utils/eventbus'
@@ -81,26 +82,30 @@ import {
 } from '@element-plus/icons-vue'
 
 const store = useStore()
+// 控制表格/网格视图的切换
 const viewMode = ref('table')
 
+// 从vuex获取车辆数据和交易历史
 const carDatas = computed(() => store.state.carMarket.allSaleCars)
 const historyData = computed(() => store.state.carMarket.historeInfos)
 
+// 刷新在售车辆列表
 const refreshList = () => {
   store.dispatch('carMarket/getAllSaleCarsAction')
 }
 
+// 刷新交易历史
 const refreshHistory = () => {
   store.dispatch('carMarket/tradeHistoryListAction')
 }
 
-// 组件挂载时获取数据
+// 组件挂载时初始化数据
 onMounted(() => {
   refreshList()
   refreshHistory()
 })
 
-// 组件卸载时移除事件监听
+// 组件卸载时清理事件监听
 onUnmounted(() => {
   eventBus.off(eventBus.CAR_UPLOADED, refreshList)
 })

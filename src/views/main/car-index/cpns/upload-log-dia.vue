@@ -43,19 +43,27 @@ import { rules } from '../config/upload.config'
 import { useStore } from 'vuex'
 
 const store = useStore()
+// 控制弹窗显示状态
 const isShow = ref(false)
+// 表单引用
 const formRef = ref(null)
+// 存储当前车辆数据
 const carData = ref({})
+// 表单数据对象
 const formData = ref({
-  CarId: '', // Vin号
+  CarId: '', // 车架号
   carowner: '', // 车主
   m_amount: '', // 材料金额
   r_amount: '', // 维修金额
   Describe: '', // 事故描述
-  time: '', // 次数
+  time: '', // 维修次数
   detail: '' // 维修详情
 })
 
+/**
+ * 显示维修记录上传弹窗
+ * @param {Object} data - 车辆数据对象
+ */
 const show = (data) => {
   carData.value = data
   formData.value.CarId = data.CarId
@@ -63,7 +71,10 @@ const show = (data) => {
   isShow.value = true
 }
 
-// 确认上传
+/**
+ * 确认上传维修记录
+ * 验证表单并提交记录
+ */
 const confirmUpload = () => {
   formRef.value.validate(async (valid) => {
     if (valid) {
@@ -74,7 +85,9 @@ const confirmUpload = () => {
   })
 }
 
-// 关闭弹窗清空表单内容
+/**
+ * 弹窗关闭时重置表单
+ */
 const diaClosed = () => {
   formData.value = {
     CarId: '',
@@ -87,6 +100,7 @@ const diaClosed = () => {
   }
 }
 
+// 暴露show方法给父组件
 defineExpose({
   show
 })
